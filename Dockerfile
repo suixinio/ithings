@@ -5,6 +5,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 RUN apk add --no-cache make
 WORKDIR /ithings/
 COPY ./ ./
+RUN go mod tidy
 RUN cd ./src/apisvr && go build .
 
 FROM node:19-alpine3.16 as web-builder
