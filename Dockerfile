@@ -5,7 +5,7 @@ WORKDIR /ithings/
 COPY ./go.mod ./go.mod
 RUN go mod download
 COPY ./ ./
-RUN cd ./src/apisvr && go build .
+RUN cd ./src/apisvr && go mod tidy && go build .
 
 FROM node:19 as web-builder
 WORKDIR /ithings/
