@@ -5,13 +5,13 @@ WORKDIR /ithings/
 COPY ./go.mod ./go.mod
 RUN go mod download
 COPY ./ ./
-RUN cd ./src/apisvr && go build .
+RUN cd ./src/apisvr && go mod tidy && go build .
 
 FROM node:19 as web-builder
 WORKDIR /ithings/
 COPY ./assets/package.json ./assets/package.json
 COPY ./assets/yarn.lock ./assets/yarn.lock
-RUN cd assets && yarn install
+RUN cd assets && yarn install --network-timeout=600000
 COPY ./assets ./assets
 RUN cd assets && yarn build
 
