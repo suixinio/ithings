@@ -1,19 +1,16 @@
 FROM golang:1.19-alpine3.16 as go-builder
-ARG GOPROXY=goproxy.cn
-ENV GOPROXY=https://${GOPROXY},direct
 WORKDIR /ithings/
 COPY ./go.mod ./go.mod
 RUN go mod download
 COPY ./ ./
-RUN cd ./src/apisvr && go build .
+RUN cd ./src/apisvr && go mod tidy && go build .
 
 FROM node:19 as web-builder
 WORKDIR /ithings/
 COPY ./assets/package.json ./assets/package.json
-COPY ./assets/yarn.lock ./assets/yarn.lock
 RUN cd assets && yarn install
 COPY ./assets ./assets
-RUN cd assets && yarn build
+RUN cd assets && yarn install --no-lockfile
 
 FROM alpine:3.16
 LABEL homepage="https://github.com/i4de/ithings"
